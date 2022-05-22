@@ -133,7 +133,10 @@ def calculate_counts(data: pd.DataFrame, group: str) -> pd.DataFrame:
 
 def main() -> None:
     logging.basicConfig(
-        filename="bmi_calculator.log", encoding="utf-8", level=logging.INFO
+        filename="bmi_calculator.log",
+        encoding="utf-8",
+        level=logging.INFO,
+        format="%(asctime)s - %(levelname)s- %(message)s",
     )
     patient_df = load_json_data("patient_data")
     bmi_cat_risk = load_csv_data("bmi_categories")
