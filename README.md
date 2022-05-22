@@ -9,12 +9,15 @@ I believe this approach will be sufficent for this data and will reduce overall 
 
 If the data was to grow exponentially this script could be repurposed to leverage compute clusters and I would suggest running it in a serverless way via DataProc/DataFlow on GCP unless there is an internal cluster available.
 
+## Missing/Null data
+For this script I have decided to remove any rows that have missing data. However a different approach could be used depending on the business use case
+
 # How to run
 
 Run `pip install requirements.txt`
 Run `python calculate_bmi.py``
 
-# Description
+## Description
 
 Python app that takes in JSON patient data, calculates the BMI and then outputs cleaned data and a count per BMI category
 
