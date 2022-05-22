@@ -1,22 +1,34 @@
 # Toby Wright 2022
 import pandas as pd
 import numpy as np
+import logging
+import sys
 
 
 def load_json_data(filename: str) -> pd.DataFrame:
     """
     Function to load a JSON file into a pandas dataframe
     """
-    data = pd.read_json(f"{filename}.json")
-    return data
+    try:
+        data = pd.read_json(f"{filename}.json")
+        logging.info("Data read from JSON file")
+        return data
+    except ValueError as e:
+        logging.warning(f"Json file not found: {e}")
+        sys.exit()
 
 
 def load_csv_data(filename: str) -> pd.DataFrame:
     """
     Function to load a CSV file into a pandas dataframe
     """
-    data = pd.read_csv(f"{filename}.csv")
-    return data
+    try:
+        data = pd.read_csv(f"{filename}.csv")
+        logging.info("Data read from CSV file")
+        return data
+    except FileNotFoundError as e:
+        logging.warning(f"CSV file not found: {e}")
+        sys.exit()
 
 
 def write_json_file(data: pd.DataFrame, filename: str) -> None:
@@ -24,6 +36,7 @@ def write_json_file(data: pd.DataFrame, filename: str) -> None:
     Function to write a json file from a pandas dataframe
     """
     data.to_json(f"{filename}.json")
+    logging.info("JSON file written")
 
 
 def write_csv_file(data: pd.DataFrame, filename: str) -> None:
@@ -31,6 +44,7 @@ def write_csv_file(data: pd.DataFrame, filename: str) -> None:
     Function to write a CSV file from a pandas dataframe
     """
     data.to_csv(f"{filename}.csv")
+    logging.info("CSV file written")
 
 
 def calculate_height_m(data: pd.DataFrame) -> pd.DataFrame:
@@ -38,6 +52,7 @@ def calculate_height_m(data: pd.DataFrame) -> pd.DataFrame:
     Function to convert Height from CM to M
     """
     data["HeightM"] = data["HeightCm"] / 100
+    logging.info("Height in M calculated")
     return data
 
 
@@ -52,6 +67,7 @@ def calculate_bmi(data: pd.DataFrame) -> pd.DataFrame:
     data = calculate_height_m(data)
     data["BMI"] = data["WeightKg"] / (data["HeightM"] ** 2)
     data.drop("HeightM", axis=1, inplace=True)
+    logging.info("BMI calculated")
     return data
 
 
@@ -90,11 +106,14 @@ def calculate_bmi_category(data: pd.DataFrame) -> pd.DataFrame:
     ]
     data["BMI_category"] = np.select(bmi_bins, categories)
     data.drop("BMI_rounded", axis=1, inplace=True)
+    logging.info("BMI category calculated")
     return data
 
 
 def join_patients_risk(bmi_cat_risk: pd.DataFrame, data: pd.DataFrame) -> pd.DataFrame:
-    return pd.merge(data, bmi_cat_risk, how="left")
+    comb_df = pd.merge(data, bmi_cat_risk, how="left")
+    logging.info("Dataset joined with BMI risks")
+    return comb_df
 
 
 def calculate_counts(data: pd.DataFrame, group: str) -> pd.DataFrame:
@@ -106,10 +125,14 @@ def calculate_counts(data: pd.DataFrame, group: str) -> pd.DataFrame:
     overweight = data[data["BMI_category"] == "Overweight"]
     count_data = overweight.reset_index().groupby(group).agg({"index": "nunique"})
     count_data.rename(columns={"index": "PatientCount"}, inplace=True)
+    logging.info("Counts calculated for Overweight category")
     return count_data
 
 
 def main() -> None:
+    logging.basicConfig(
+        filename="bmi_calculator.log", encoding="utf-8", level=logging.INFO
+    )
     patient_df = load_json_data("patient_data")
     bmi_cat_risk = load_csv_data("bmi_categories")
     patient_df_bmi = calculate_bmi(patient_df)
