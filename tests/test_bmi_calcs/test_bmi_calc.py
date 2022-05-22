@@ -1,5 +1,10 @@
 # Toby Wright 2022
-from bmi_calculator import calculate_height_m, calculate_bmi, calculate_bmi_category
+from bmi_calculator import (
+    calculate_height_m,
+    calculate_bmi,
+    calculate_bmi_category,
+    calculate_counts,
+)
 import pandas as pd
 
 
@@ -26,3 +31,11 @@ def test_calculate_bmi_category():
     df_bmi = calculate_bmi(test_df)
     updated_df = calculate_bmi_category(df_bmi)
     assert updated_df["BMI_category"].iloc[0] == "Very severely obese"
+
+
+def test_calculate_counts():
+    test_df = pd.DataFrame.from_dict(
+        {"BMI_category": ["Overweight", "Overweight", "Severley Obese"]}
+    )
+    updated_df = calculate_counts(test_df, "BMI_category")
+    assert updated_df["PatientCount"].iloc[0] == 2
