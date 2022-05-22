@@ -1,5 +1,6 @@
 # Toby Wright 2022
 import pandas as pd
+import numpy as np
 
 
 def load_json_data(filename: str) -> pd.DataFrame:
@@ -40,10 +41,49 @@ def calculate_bmi(data: pd.DataFrame) -> pd.DataFrame:
     return data
 
 
+def calculate_bmi_category(data: pd.DataFrame) -> pd.DataFrame:
+    """
+    Function to calculate the BMI category
+    Underweight = BMI <= 18.4
+    Normal weight = 18.5 >= BMI <= 24.9
+    Overweight = 25 >= BMI <= 29.9
+    Moderatley obese = 30 >= BMI <= 34.9
+    Severely obese = 35 >= BMI <= 39.9
+    Very severely obese = BMI >= 40
+    The table provided requires BMI to be rounded to 1 d.p
+    1. Round BMI to 1 d.p
+    2. Create BMI category condition list
+    3. Create list of BMI category names
+    4. Create BMI_category column using numpy select
+    5. Drop the BMI_rounded column
+    """
+    data["BMI_rounded"] = data["BMI"].round(1)
+    bmi_bins = [
+        (data["BMI_rounded"] <= 18.4),
+        (data["BMI_rounded"] >= 18.5) & (data["BMI_rounded"] <= 24.9),
+        (data["BMI_rounded"] >= 25) & (data["BMI_rounded"] <= 29.9),
+        (data["BMI_rounded"] >= 30) & (data["BMI_rounded"] <= 34.9),
+        (data["BMI_rounded"] >= 35) & (data["BMI_rounded"] <= 39.9),
+        (data["BMI_rounded"] >= 40),
+    ]
+    categories = [
+        "Underweight",
+        "Normal weight",
+        "Overweight",
+        "Moderately obese",
+        "Severely obese",
+        "Very severely obese",
+    ]
+    data["BMI_category"] = np.select(bmi_bins, categories)
+    data.drop("BMI_rounded", axis=1, inplace=True)
+    return data
+
+
 def main() -> None:
     patient_df = load_json_data("patient_data")
     bmi_cat_risk = load_csv_data("bmi_categories")
     patient_df_bmi = calculate_bmi(patient_df)
+    patient_df_bmi_cat = calculate_bmi_category(patient_df_bmi)
 
 
 if __name__ == "__main__":
