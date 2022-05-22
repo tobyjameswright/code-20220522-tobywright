@@ -13,7 +13,8 @@ If the data was to grow exponentially this script could be repurposed to leverag
 For this script I have decided to remove any rows that have missing data. However a different approach could be used depending on the business use case. I have also removed any rows that include 0 in the height column to avoid any divison by 0 errors. Depending on business use case these corrupt data rows could be redirected to another file to handle them manually or alert the business to to the number of corrupt cases.
 
 # How to run
-
+Run `git clone https://github.com/tobyjameswright/code-20220522-tobywright`
+Run `cd code-20220522-tobywright`
 Run `pip install requirements.txt`
 Run `python calculate_bmi.py`
 
