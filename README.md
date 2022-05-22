@@ -13,7 +13,8 @@ If the data was to grow exponentially this script could be repurposed to leverag
 For this script I have decided to remove any rows that have missing data. However a different approach could be used depending on the business use case
 
 # How to run
-
+Run `git clone https://github.com/tobyjameswright/code-20220522-tobywright`
+Run `cd code-20220522-tobywright`
 Run `pip install requirements.txt`
 Run `python calculate_bmi.py`
 
