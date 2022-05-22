@@ -26,6 +26,13 @@ def write_json_file(data: pd.DataFrame, filename: str) -> None:
     data.to_json(f"{filename}.json")
 
 
+def write_csv_file(data: pd.DataFrame, filename: str) -> None:
+    """
+    Function to write a CSV file from a pandas dataframe
+    """
+    data.to_csv(f"{filename}.csv")
+
+
 def calculate_height_m(data: pd.DataFrame) -> pd.DataFrame:
     """
     Function to convert Height from CM to M
@@ -112,6 +119,7 @@ def main() -> None:
     summarised_data = calculate_counts(
         patient_df_bmi_cat_risk[["BMI_category"]], "BMI_category"
     )
+    write_csv_file(summarised_data, "patients_count")
 
 
 if __name__ == "__main__":
