@@ -15,7 +15,7 @@ For this script I have decided to remove any rows that have missing data. Howeve
 # How to run
 
 Run `pip install requirements.txt`
-Run `python calculate_bmi.py``
+Run `python calculate_bmi.py`
 
 ## Description
 
