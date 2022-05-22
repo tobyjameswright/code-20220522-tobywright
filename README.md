@@ -10,7 +10,7 @@ I believe this approach will be sufficent for this data and will reduce overall 
 If the data was to grow exponentially this script could be repurposed to leverage compute clusters and I would suggest running it in a serverless way via DataProc/DataFlow on GCP unless there is an internal cluster available.
 
 ## Missing/Null data
-For this script I have decided to remove any rows that have missing data. However a different approach could be used depending on the business use case
+For this script I have decided to remove any rows that have missing data. However a different approach could be used depending on the business use case. I have also removed any rows that include 0 in the height column to avoid any divison by 0 errors. Depending on business use case these corrupt data rows could be redirected to another file to handle them manually or alert the business to to the number of corrupt cases.
 
 # How to run
 

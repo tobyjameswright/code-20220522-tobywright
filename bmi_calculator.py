@@ -8,12 +8,14 @@ import sys
 def load_json_data(filename: str) -> pd.DataFrame:
     """
     Function to load a JSON file into a pandas dataframe
-    This function also deletes any rows that are missing
+    This function also calls the clean_patient_data function that removes 0
+    values in height and any rows with null values
     """
     try:
         data = pd.read_json(f"{filename}.json")
-        data.dropna(inplace=True)
         logging.info("Data read from JSON file")
+        data = clean_patient_data(data)
+        logging.info("Cleaning data")
         return data
     except ValueError as e:
         logging.warning(f"Json file not found: {e}")
@@ -129,6 +131,16 @@ def calculate_counts(data: pd.DataFrame, group: str) -> pd.DataFrame:
     count_data.rename(columns={"index": "PatientCount"}, inplace=True)
     logging.info("Counts calculated for Overweight category")
     return count_data
+
+
+def clean_patient_data(data: pd.DataFrame) -> pd.DataFrame:
+    """
+    Function to remove rows with null values also will remove any rows that
+    include a 0 in height to avoid division by 0 error
+    """
+    data.dropna(inplace=True)
+    data.drop(data[data["HeightCm"] == 0].index, inplace=True)
+    return data
 
 
 def main() -> None:
