@@ -8,6 +8,7 @@ import sys
 def load_json_data(filename: str) -> pd.DataFrame:
     """
     Function to load a JSON file into a pandas dataframe
+    This function also deletes any rows that are missing
     """
     try:
         data = pd.read_json(f"{filename}.json")
