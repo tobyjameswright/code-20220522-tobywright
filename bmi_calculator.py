@@ -79,11 +79,16 @@ def calculate_bmi_category(data: pd.DataFrame) -> pd.DataFrame:
     return data
 
 
+def join_patients_risk(bmi_cat_risk: pd.DataFrame, data: pd.DataFrame) -> pd.DataFrame:
+    return pd.merge(data, bmi_cat_risk, how="left")
+
+
 def main() -> None:
     patient_df = load_json_data("patient_data")
     bmi_cat_risk = load_csv_data("bmi_categories")
     patient_df_bmi = calculate_bmi(patient_df)
     patient_df_bmi_cat = calculate_bmi_category(patient_df_bmi)
+    patient_df_bmi_cat_risk = join_patients_risk(bmi_cat_risk, patient_df_bmi_cat)
 
 
 if __name__ == "__main__":
