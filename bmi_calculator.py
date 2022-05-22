@@ -11,6 +11,7 @@ def load_json_data(filename: str) -> pd.DataFrame:
     """
     try:
         data = pd.read_json(f"{filename}.json")
+        data.dropna(inplace=True)
         logging.info("Data read from JSON file")
         return data
     except ValueError as e:
