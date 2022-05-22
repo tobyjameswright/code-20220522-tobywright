@@ -90,6 +90,18 @@ def join_patients_risk(bmi_cat_risk: pd.DataFrame, data: pd.DataFrame) -> pd.Dat
     return pd.merge(data, bmi_cat_risk, how="left")
 
 
+def calculate_counts(data: pd.DataFrame, group: str) -> pd.DataFrame:
+    """
+    Function to calculate the counts per category
+    As only the overwight category was requested a filter is also applied,
+    however this can be removed to recieve all data
+    """
+    overweight = data[data["BMI_category"] == "Overweight"]
+    count_data = overweight.reset_index().groupby(group).agg({"index": "nunique"})
+    count_data.rename(columns={"index": "PatientCount"}, inplace=True)
+    return count_data
+
+
 def main() -> None:
     patient_df = load_json_data("patient_data")
     bmi_cat_risk = load_csv_data("bmi_categories")
@@ -97,6 +109,9 @@ def main() -> None:
     patient_df_bmi_cat = calculate_bmi_category(patient_df_bmi)
     patient_df_bmi_cat_risk = join_patients_risk(bmi_cat_risk, patient_df_bmi_cat)
     write_json_file(patient_df_bmi_cat_risk, "patients_clean")
+    summarised_data = calculate_counts(
+        patient_df_bmi_cat_risk[["BMI_category"]], "BMI_category"
+    )
 
 
 if __name__ == "__main__":
